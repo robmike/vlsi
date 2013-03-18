@@ -106,7 +106,7 @@ def cofactor(cubelist, idx, keep):
 def complement(cubelist, nvar):
     one = [D]*(nvar + 1)
     if len(cubelist) == 0:
-        return one
+        return [one]
     if one in cubelist:
         return []
     if len(cubelist) == 1:

@@ -89,7 +89,19 @@ def split_var(cubelist):
     else:                       # unates only
         return counts.index(max(counts))
 
-    
+def cofactor(cubelist, idx, keep):
+    cubelist = copy.deepcopy(cubelist)
+    out = []
+    reject = keep == P and N or P
+    for c in cubelist:
+        if c[idx] == keep:
+            out.append(c)
+            out[-1][idx] = D
+        elif c[idx] == reject:
+            pass
+        else:                   # don't care
+            out.append(c)
+    return out
 
 def complement(cubelist, nvar):
     one = [D]*(nvar + 1)
@@ -108,7 +120,21 @@ def complement(cubelist, nvar):
         return outcl
 
     x = split_var(cubelist)
-        
+    pos = complement(cofactor(cubelist, x, P), nvar)
+    neg = complement(cofactor(cubelist, x, N), nvar)
+    # return x*not(F_x) + not(x)*not(F_not(x))
+    for cl in pos:
+        cl[x] = P
+    for cl in neg:
+        cl[x] = N
+    return pos + neg
+
+def print_cubelist(cubelist):
+    s = []
+    for c in cubelist:
+        s.append(''.join([chr(i+64) + {N : "'", P : ""}[x] for i,x in enumerate(c) if x != D]))
+    return ' + '.join(s)
+
 s = StringIO()
 x = readdata('part1.cubes')
 pprint(x)
@@ -119,3 +145,11 @@ print complement([], 5)         # 1
 print complement([[D, D, D, D]], 3)
 print complement([x[0]], len(x[0])-1)
 print split_var(x)
+print cofactor(x, 1, P)
+print cofactor(x, 1, N)
+print print_cubelist(x)
+print print_cubelist(complement(x,len(x[0]) - 1))
+
+z = [[D, P, P, N], [D, D, N]]
+print print_cubelist(z)
+print print_cubelist(complement(z, len(z[0]) - 1))

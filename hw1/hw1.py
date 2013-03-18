@@ -54,11 +54,11 @@ def writedata(cubelist, out):
     ncubes = len(cubelist)
     out.write('%i\n%i\n' % (nvar, ncubes))
     for cube in cubelist:
-        out.write(len([x for x in cube if x != D]) - 1)
+        out.write(str(len([x for x in cube if x != D])))
         for i,x in enumerate(cube[1:]):
             if x != D:
                 out.write(' ')
-                out.write(x == P and i+1 or -(i+1))
+                out.write(x == P and str(i+1) or str(-(i+1)))
         out.write('\n')
     return out
 
@@ -135,21 +135,30 @@ def print_cubelist(cubelist):
         s.append(''.join([chr(i+64) + {N : "'", P : ""}[x] for i,x in enumerate(c) if x != D]))
     return ' + '.join(s)
 
-s = StringIO()
-x = readdata('part1.cubes')
-pprint(x)
-writedata(x, s)
-print s.getvalue()
+if __name__ == '__main__':
+    fname = sys.argv[1]
+    x = readdata(fname)
+    y = complement(x, len(x[0]) - 1)
+    outf = open(fname + '.out', 'w')
+    writedata(y, outf)
+    print print_cubelist(y)
+    
 
-print complement([], 5)         # 1
-print complement([[D, D, D, D]], 3)
-print complement([x[0]], len(x[0])-1)
-print split_var(x)
-print cofactor(x, 1, P)
-print cofactor(x, 1, N)
-print print_cubelist(x)
-print print_cubelist(complement(x,len(x[0]) - 1))
+# s = StringIO()
+# x = readdata('part1.cubes')
+# pprint(x)
+# writedata(x, s)
+# print s.getvalue()
 
-z = [[D, P, P, N], [D, D, N]]
-print print_cubelist(z)
-print print_cubelist(complement(z, len(z[0]) - 1))
+# print complement([], 5)         # 1
+# print complement([[D, D, D, D]], 3)
+# print complement([x[0]], len(x[0])-1)
+# print split_var(x)
+# print cofactor(x, 1, P)
+# print cofactor(x, 1, N)
+# print print_cubelist(x)
+# print print_cubelist(complement(x,len(x[0]) - 1))
+
+# z = [[D, P, P, N], [D, D, N]]
+# print print_cubelist(z)
+# print print_cubelist(complement(z, len(z[0]) - 1))

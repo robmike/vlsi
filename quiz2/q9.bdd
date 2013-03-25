@@ -1,0 +1,23 @@
+# input vars
+boolean v w x y z
+#
+# define left-hand circuit z1
+eval w1 !w&!x&y&!z
+eval w2 w&z
+eval w3 v&!w&y
+eval F w1&w2&w3
+eval w4 !w+!y+z
+eval w5 !w+y+z
+eval w6 v+w+y
+eval w7 w+x+y
+eval w8 !v+w+x+!y+!z
+eval w9 v+w+!y+!z
+eval G w4&w5&w6&w7
+
+verify F G
+# XOR z1 and z2 to find assignments of the variables
+# that will make the network outputs different
+eval diff F ^ G
+satisfy diff
+# that's it
+quit
